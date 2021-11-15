@@ -17,6 +17,7 @@ class CreateSkillsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
+            $table->string('icon');
             $table->timestamps();
         });
     }
