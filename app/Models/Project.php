@@ -9,4 +9,8 @@ class Project extends Model
 {
     use HasFactory;
     protected $fillable = ['title', 'description', 'url', 'image'];
+    public function typeServices()
+    {
+        return $this->belongsToMany(TypeService::class);
+    }
 }
