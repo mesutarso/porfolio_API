@@ -63,13 +63,13 @@ class SkillController extends Controller
     {
         $skill = Skill::find($id);
         if (is_null($skill)) {
-            return $this->sendError('Skill not found.');
+            return response()->json(['error' => 'Skill not found'], 404);
         }
         return response()->json([
             "success" => true,
             "message" => "Skill retrieved successfully.",
             "data" => $skill
-        ]);
+        ], 200);
     }
 
     /**
