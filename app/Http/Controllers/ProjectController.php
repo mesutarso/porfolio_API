@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use function PHPUnit\Framework\isNull;
@@ -17,7 +19,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project = Project::all();
+        $project = Project::with('services')->get();
         if ($project->isEmpty()) {
             return response()->json(['error' => 'No project found'], 404);
         } else {
@@ -38,24 +40,38 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'title' => 'required|unique:skills|max:255',
-            'description' => 'required',
-            'url' => 'required',
-            'image' => 'required',
-            'type_de_service' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-        $project = Project::create($input);
-        return response()->json([
-            "success" => true,
-            "message" => "Project created successfully.",
-            "data" => $project
-        ], 201);
-    }
 
+        $validator = Validator::make(
+            $input,
+            [
+                'title' => 'required|unique:projects|max:255',
+                'description' => 'required',
+                'url' => 'required',
+                'image' => 'required',
+                'service_id' => 'required'
+            ]
+        )->validate();
+
+        try {
+            DB::beginTransaction();
+            $project = Project::create(Arr::except($input, ['service_id']));
+            $project->services()->sync($input['service_id']);
+            $project->save();
+            DB::commit();
+            return response()->json([
+                "success" => true,
+                "message" => "Project created",
+                "data" => $project
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                "success" => false,
+                "message" => "Project not created",
+                "data" => $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Display the specified resource.
      *

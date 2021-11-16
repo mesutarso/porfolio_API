@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSerciceProjectTable extends Migration
+class CreateProjectServiceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateSerciceProjectTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_project', function (Blueprint $table) {
+        Schema::create('project_service', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
             $table->unsignedBigInteger('project_id');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+            $table->unsignedBigInteger('service_id');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateSerciceProjectTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_project');
+        Schema::dropIfExists('project_service');
     }
 }
