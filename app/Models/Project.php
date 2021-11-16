@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'url', 'image'];
-    public function typeServices()
+    protected $fillable = ['title', 'description', 'url', 'image', 'service_id'];
+    public function services()
     {
-        return $this->belongsToMany(TypeService::class);
+        return $this->belongsToMany(Service::class);
     }
 }

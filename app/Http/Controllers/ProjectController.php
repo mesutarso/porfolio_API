@@ -23,7 +23,7 @@ class ProjectController extends Controller
         } else {
             return response()->json([
                 "success" => true,
-                "message" => "Skill List",
+                "message" => "Project List",
                 "data" => $project
             ], 200);
         }
@@ -43,6 +43,7 @@ class ProjectController extends Controller
             'description' => 'required',
             'url' => 'required',
             'image' => 'required',
+            'type_de_service' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());

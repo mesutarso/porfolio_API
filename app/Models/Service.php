@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'description', 'icon'];
+    protected $fillable = ['name', 'description'];
+    protected $table = 'services';
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class);
+    }
 }
