@@ -40,11 +40,9 @@ class ServiceController extends Controller
             'name' => 'required|unique:services|max:255',
             'description' => 'required',
 
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-        $services = Service::create($input);
+        ])->validate();
+
+        $services = Service::create($validator);
         return response()->json([
             "success" => true,
             "message" => "Services created successfully.",
